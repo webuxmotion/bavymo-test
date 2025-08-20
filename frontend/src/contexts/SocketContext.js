@@ -10,6 +10,7 @@ const SERVER_URL =
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [randomId, setRandomId] = useState(null);
+  const [serverData, setServerData] = useState(null);
 
   useEffect(() => {
     let socketIo = null;
@@ -32,12 +33,13 @@ export const SocketProvider = ({ children }) => {
         setRandomId(id);
       });
 
+      socketIo.on('serverData', (data) => {
+        setServerData(data);
+      });
 
       socketIo.on('disconnect', () => {
       });
     }
-
-
 
     setupSocket();
 
@@ -45,7 +47,7 @@ export const SocketProvider = ({ children }) => {
   }, []);
 
   return (
-    <SocketContext.Provider value={{ socket, randomId }}>
+    <SocketContext.Provider value={{ socket, randomId, serverData }}>
       {children}
     </SocketContext.Provider>
   );

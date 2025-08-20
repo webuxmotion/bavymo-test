@@ -51,6 +51,7 @@ const io = new Server(server, {
 });
 
 const userMap = new Map();
+const serverData = {};
 
 io.on('connection', (socket) => {
   const cookies = socket.handshake.headers.cookie;
@@ -73,14 +74,28 @@ io.on('connection', (socket) => {
   // Store mapping
   userMap.set(randomId, socket.id);
 
+  const usersArray = [...userMap.keys()];
+  serverData.users = usersArray;
+  io.emit('serverData', serverData);
+
+  // Signaling for WebRTC
+  socket.on('signal', ({ to, data }) => {
+    const targetSocketId = userMap.get(to);
+    if (targetSocketId) {
+      io.to(targetSocketId).emit('signal', { from: randomId, data });
+    }
+  });
+
   socket.on('message', (msg) => {
     socket.emit('message', `Server received: ${msg}`);
-
-    console.log(userMap);
   });
 
   socket.on('disconnect', () => {
     userMap.delete(randomId);
+
+    const usersArray = [...userMap.keys()];
+    serverData.users = usersArray;
+    io.emit('serverData', serverData);
   });
 });
 
