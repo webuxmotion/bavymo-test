@@ -6,7 +6,7 @@ import { useWebRTC } from '../hooks/userWebRTC';
 
 export default function Header() {
     const { socket, randomId, serverData } = useSocket();
-    const { startCall, remoteStream, localStream } = useWebRTC(socket, randomId);
+    const { startCall, remoteStream, localStream } = useWebRTC(socket);
     const [users, setUsers] = useState([]);
     const videoRef = useRef(null);
     const remoteVideoRef = useRef(null);
