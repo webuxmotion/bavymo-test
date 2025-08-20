@@ -5,7 +5,7 @@ import { io } from 'socket.io-client';
 const SocketContext = createContext(null);
 
 const SERVER_URL =
-  process.env.NODE_ENV === 'production' ? '/' : 'https://kazuar.com.ua';
+  process.env.NODE_ENV === 'production' ? 'https://kazuar.com.ua' : 'http://localhost:8080';
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
