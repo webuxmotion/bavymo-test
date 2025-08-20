@@ -7,17 +7,18 @@ const SocketContext = createContext(null);
 const SERVER_URL =
   process.env.NODE_ENV === 'production' ? 'https://www.kazuar.com.ua' : 'http://localhost:8080';
 
-console.log('SERVER_URL', SERVER_URL);
-
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
+  const [randomId, setRandomId] = useState(null);
 
   useEffect(() => {
     let socketIo = null;
 
     const setupSocket = async () => {
       // ✅ 1. Ensure server sets the randomId cookie (HTTP-only)
-      await fetch(`${SERVER_URL}/api/get-random-id`, { credentials: 'include' });
+      const res = await fetch(`${SERVER_URL}/api/get-random-id`, { credentials: 'include' });
+      const data = await res.json();
+      setRandomId(data.randomId);
 
       // ✅ 2. Connect to Socket.IO with credentials to send the cookie automatically
       socketIo = io(SERVER_URL, { withCredentials: true });
@@ -26,9 +27,17 @@ export const SocketProvider = ({ children }) => {
         setSocket(socketIo);
       });
 
+      // In case server generates a new one dynamically
+      socketIo.on('setRandomId', (id) => {
+        setRandomId(id);
+      });
+
+
       socketIo.on('disconnect', () => {
       });
     }
+
+
 
     setupSocket();
 
@@ -36,7 +45,7 @@ export const SocketProvider = ({ children }) => {
   }, []);
 
   return (
-    <SocketContext.Provider value={socket}>
+    <SocketContext.Provider value={{ socket, randomId }}>
       {children}
     </SocketContext.Provider>
   );

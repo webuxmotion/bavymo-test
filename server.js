@@ -27,15 +27,15 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 app.get('/api/get-random-id', (req, res) => {
-
   let randomId = req.cookies.randomId;
+
   if (!randomId) {
     randomId = generateWord();
     res.cookie('randomId', randomId, {
       maxAge: 120000,
-      httpOnly: true,   // JS in browser cannot read/write it
-      secure: process.env.NODE_ENV === 'production', // only https in prod
-      sameSite: 'None',
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // true only in prod
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
       path: '/',
     });
   }
@@ -75,6 +75,8 @@ io.on('connection', (socket) => {
 
   socket.on('message', (msg) => {
     socket.emit('message', `Server received: ${msg}`);
+
+    console.log(userMap);
   });
 
   socket.on('disconnect', () => {

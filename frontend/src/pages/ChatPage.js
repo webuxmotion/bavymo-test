@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSocket } from '../contexts/SocketContext';
 
 export default function ChatPage() {
-    const socket = useSocket();
+    const { socket } = useSocket();
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
 
