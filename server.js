@@ -35,7 +35,7 @@ app.get('/get-random-id', (req, res) => {
       maxAge: 120000,
       httpOnly: true,   // JS in browser cannot read/write it
       secure: process.env.NODE_ENV === 'production', // only https in prod
-      sameSite: 'lax',  // prevents CSRF in most cases
+      sameSite: 'None',
       path: '/',
     });
   }

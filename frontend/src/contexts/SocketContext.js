@@ -7,6 +7,8 @@ const SocketContext = createContext(null);
 const SERVER_URL =
   process.env.NODE_ENV === 'production' ? 'https://kazuar.com.ua' : 'http://localhost:8080';
 
+console.log('SERVER_URL', SERVER_URL);
+
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
