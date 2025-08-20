@@ -7,8 +7,15 @@ const SocketContext = createContext(null);
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
+  const SERVER_URL =
+    process.env.NODE_ENV === 'production'
+      ? 'http://185.233.47.117:8080'
+      : 'http://localhost:8080';
+
+
   useEffect(() => {
-    const socketIo = io('http://localhost:8080'); // connect to your server
+
+    const socketIo = io(SERVER_URL); // connect to your server
 
 
     socketIo.on('connect', () => {
