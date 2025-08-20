@@ -7,10 +7,12 @@ const app = express();
 const PORT = 8080;
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, './frontend/build')));
+  const buildPath = path.join(__dirname, './frontend/build');
+  app.use(express.static(buildPath));
 
-  app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, './frontend/build/index.html'));
+  // Serve index.html for all unknown routes
+  app.get(/^\/(?!api|socket).*/, (req, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'));
   });
 }
 
