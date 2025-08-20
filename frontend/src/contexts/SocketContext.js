@@ -17,7 +17,7 @@ export const SocketProvider = ({ children }) => {
 
     const setupSocket = async () => {
       // ✅ 1. Ensure server sets the randomId cookie (HTTP-only)
-      await fetch(`${SERVER_URL}/get-random-id`, { credentials: 'include' });
+      await fetch(`${SERVER_URL}/api/get-random-id`, { credentials: 'include' });
 
       // ✅ 2. Connect to Socket.IO with credentials to send the cookie automatically
       socketIo = io(SERVER_URL, { withCredentials: true });

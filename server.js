@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-app.get('/get-random-id', (req, res) => {
+app.get('/api/get-random-id', (req, res) => {
 
   let randomId = req.cookies.randomId;
   if (!randomId) {
