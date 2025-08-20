@@ -4,29 +4,33 @@ import { io } from 'socket.io-client';
 
 const SocketContext = createContext(null);
 
+const SERVER_URL =
+  process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:8080';
+
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
-  const SERVER_URL =
-    process.env.NODE_ENV === 'production'
-      ? '/'           // relative URL
-      : 'http://localhost:8080'; // development
-
   useEffect(() => {
+    let socketIo = null;
 
-    const socketIo = io(SERVER_URL); // connect to your server
+    const setupSocket = async () => {
+      // ✅ 1. Ensure server sets the randomId cookie (HTTP-only)
+      await fetch(`${SERVER_URL}/get-random-id`, { credentials: 'include' });
 
+      // ✅ 2. Connect to Socket.IO with credentials to send the cookie automatically
+      socketIo = io(SERVER_URL, { withCredentials: true });
 
-    socketIo.on('connect', () => {
-      setSocket(socketIo);
-      console.log('Connected to Socket.IO server, id:', socketIo.id);
-    });
+      socketIo.on('connect', () => {
+        setSocket(socketIo);
+      });
 
-    socketIo.on('disconnect', () => {
-      console.log('Disconnected from Socket.IO server');
-    });
+      socketIo.on('disconnect', () => {
+      });
+    }
 
-    return () => socketIo.disconnect();
+    setupSocket();
+
+    return () => socketIo?.disconnect();
   }, []);
 
   return (
