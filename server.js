@@ -9,7 +9,7 @@ const { generateWord } = require('./utils/generateWord');
 const app = express();
 const PORT = 8080;
 
-const origin = process.env.NODE_ENV === 'production' ? 'https://kazuar.com.ua' : 'http://localhost:3000';
+const origin = process.env.NODE_ENV === 'production' ? 'https://www.kazuar.com.ua' : 'http://localhost:3000';
 app.use(cookieParser());
 app.use(cors({
   origin,
